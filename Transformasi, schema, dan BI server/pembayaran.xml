@@ -1,0 +1,70 @@
+<Schema name="skema-pendapatan-terendah">
+  <Dimension type="TimeDimension" visible="true" highCardinality="false" name="dim_waktu">
+    <Hierarchy name="waktu" visible="true" hasAll="true" allMemberName="allWaktu" primaryKey="id">
+      <Table name="dim_date">
+      </Table>
+      <Level name="tahun" visible="true" table="dim_date" column="year" type="String" uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never">
+      </Level>
+      <Level name="bulan" visible="true" table="dim_date" column="month" type="String" uniqueMembers="false" levelType="TimeMonths" hideMemberIf="Never">
+      </Level>
+      <Level name="hari" visible="true" table="dim_date" column="day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="dim_pelanggan">
+    <Hierarchy name="pelanggan" visible="true" hasAll="true" allMemberName="allPelanggan" primaryKey="id">
+      <Table name="dim_customer">
+      </Table>
+      <Level name="kota" visible="true" table="dim_customer" column="city" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="negara" visible="true" table="dim_customer" column="country" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="nama" visible="true" table="dim_customer" column="name" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="dim_staf">
+    <Hierarchy name="staf" visible="true" hasAll="true" allMemberName="allStaf" primaryKey="id">
+      <Table name="dim_staff">
+      </Table>
+      <Level name="nama" visible="true" table="dim_staff" column="name" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="dim_film">
+    <Hierarchy name="film" visible="true" hasAll="true" primaryKey="id">
+      <Table name="dim_film">
+      </Table>
+      <Level name="judul" visible="true" table="dim_film" column="title" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="kategori" visible="true" table="dim_film" column="category" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="aktor" visible="true" table="dim_film" column="actor" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Cube name="cube-pembayaran" visible="true" cache="true" enabled="true">
+    <Table name="fakta_dvd">
+    </Table>
+    <DimensionUsage source="dim_waktu" name="dim_waktu" visible="true" foreignKey="sk_date" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="dim_pelanggan" name="dim_pelanggan" visible="true" foreignKey="sk_customer" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="dim_staf" name="dim_staf" visible="true" foreignKey="sk_staff" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="dim_film" name="dim_film" visible="true" foreignKey="sk_film" highCardinality="false">
+    </DimensionUsage>
+    <Measure name="total-pembayaran" column="amount" datatype="Numeric" aggregator="sum" visible="true">
+    </Measure>
+  </Cube>
+  <Cube name="cub-pendapatan-terendah" visible="true" cache="true" enabled="true">
+    <Table name="fakta_dvd">
+    </Table>
+    <DimensionUsage source="dim_waktu" name="dim_waktu" visible="true" foreignKey="sk_date" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="dim_pelanggan" name="dim_pelanggan" visible="true" foreignKey="sk_customer" highCardinality="false">
+    </DimensionUsage>
+    <Measure name="cacah-pendapatan-terendah" column="amount" datatype="Integer" aggregator="count" visible="true">
+    </Measure>
+  </Cube>
+</Schema>
